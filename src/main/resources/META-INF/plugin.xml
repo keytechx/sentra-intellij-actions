@@ -84,8 +84,7 @@
            class="org.intellij.sdk.action.CustomDefaultActionGroup"
            popup="true">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-      <action id="org.intellij.sdk.action.GenerateUtForSelectedFunctions" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"
-              icon="SdkIcons.Sdk_default_icon"/>
+      <action id="org.intellij.sdk.action.CustomGroupedAction" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"/>
     </group>
   </actions>
 

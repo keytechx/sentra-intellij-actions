@@ -64,6 +64,7 @@ public class UnitTestGenerator {
         try {
             apiResult = ApiService.genUnitTest(key, functionName, codeContent, category, getAccessToken(), generatedTests);
         } catch (IOException ex) {
+            System.out.println(ex.toString());
             return "";
         }
 
