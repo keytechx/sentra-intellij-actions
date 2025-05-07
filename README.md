@@ -21,7 +21,6 @@ Additional features of the plugin:
 |----------------------------------------------------|-----------------------------------------------------------|-------------------|
 | `org.intellij.sdk.action.GroupPopDialogAction`     | [PopupDialogAction][file:PopupDialogAction]               | `AnAction`        |
 | `org.intellij.sdk.action.GenerateUtForSelectedFunctions`        | [PopupDialogAction][file:PopupDialogAction]               | `AnAction`        |
-| `org.intellij.sdk.action.CustomGroupedAction`      | [PopupDialogAction][file:PopupDialogAction]               | `AnAction`        |
 | `org.intellij.sdk.action.CustomDefaultActionGroup` | [CustomDefaultActionGroup][file:CustomDefaultActionGroup] | `ActionGroup`     |
 | `org.intellij.sdk.action.DynamicActionGroup`       | [DynamicActionGroup][file:DynamicActionGroup]             | `ActionGroup`     |
 
