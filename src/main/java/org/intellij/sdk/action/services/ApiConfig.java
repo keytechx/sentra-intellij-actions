@@ -3,7 +3,7 @@ package org.intellij.sdk.action.services;
 public class ApiConfig {
     private static final String BASE_URL = System.getenv("API_BASE_URL") != null
             ? System.getenv("API_BASE_URL")
-            : "https://backend.sentra.dev/api/v1";
+            : "http://localhost:8080/api/v1";
 
     private static final String UNIT_TEST_BASE_URL = BASE_URL + "/unit-test-results";
     private static final String USER_TOKEN_BASE_URL = BASE_URL + "/user-tokens";

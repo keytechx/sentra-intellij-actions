@@ -10,6 +10,8 @@ import com.intellij.openapi.editor.Editor;
 import icons.SdkIcons;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+
 /**
  * Creates an action group to contain menu actions. See plugin.xml declarations.
  */
@@ -32,8 +34,6 @@ public class CustomDefaultActionGroup extends DefaultActionGroup {
     // Enable/disable depending on whether user is editing
     Editor editor = event.getData(CommonDataKeys.EDITOR);
     event.getPresentation().setEnabled(editor != null);
-    // Take this opportunity to set an icon for the group.
-    event.getPresentation().setIcon(SdkIcons.Sdk_default_icon);
   }
 
 }

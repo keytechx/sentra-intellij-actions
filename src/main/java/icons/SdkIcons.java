@@ -8,6 +8,6 @@ import javax.swing.*;
 
 public class SdkIcons {
 
-  public static final Icon Sdk_default_icon = IconLoader.getIcon("/icons/sentra-white-logo-16.svg", SdkIcons.class);
-
+  public static final Icon Sdk_default_icon = IconLoader.getIcon("/icons/sentra-logo-16_dark.svg", SdkIcons.class);
+  public static final Icon Sentra_icon = IconLoader.getIcon("/icons/sentra-logo-16.svg", SdkIcons.class);
 }

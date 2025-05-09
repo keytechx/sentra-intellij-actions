@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    intellijIdeaCommunity("2024.2.5")
+    intellijIdeaCommunity("2025.1.1")
   }
   implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
 

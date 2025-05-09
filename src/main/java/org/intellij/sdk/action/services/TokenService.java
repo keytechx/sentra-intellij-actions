@@ -146,4 +146,10 @@ public class TokenService {
         UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
         return tokenStorage.getUserToken();
     }
+
+    public static void clearStoredUserToken() {
+        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        tokenStorage.setAccessToken(null);
+        tokenStorage.setUserToken(null);
+    }
 }

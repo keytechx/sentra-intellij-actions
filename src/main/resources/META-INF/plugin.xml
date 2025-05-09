@@ -7,7 +7,7 @@
   <id>org.intellij.sdk.action</id>
 
   <!-- Text to display as name on Settings | Plugin page -->
-  <name>SDK: Action Sample</name>
+  <name>Sentra</name>
 
   <!-- Indicate this plugin can be loaded in all IntelliJ Platform-based products. -->
   <depends>com.intellij.modules.platform</depends>
@@ -47,14 +47,14 @@
       element and see how the menu text changes.) The alternate text and description attributes do not
       appear here because they are defined by action-id in the resource-bundle.
     -->
-    <action id="org.intellij.sdk.action.GenerateUtForSelectedFunctions" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"
+<!--    <action id="org.intellij.sdk.action.GenerateUtForSelectedFunctions" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"
             text="Action Basics Plugin: Pop Dialog Action" description="SDK action example"
             icon="SdkIcons.Sdk_default_icon">
       <add-to-group group-id="ToolsMenu" anchor="first"/>
       <override-text place="MainMenu" text="Pop Dialog Action"/>
       <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
       <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
-    </action>
+    </action>-->
     <!--
       All of the following menu groups add the action GenerateUtForSelectedFunctions to menus in different ways.
       Note that even though these groups reuse the same action class, in each use the action ids are unique.
@@ -66,12 +66,11 @@
       It declares one action in the group.
     -->
     <group id="org.intellij.sdk.action.GroupedActions"
-           text="Static Grouped Actions" description="SDK statically grouped action example"
-           popup="true" icon="SdkIcons.Sdk_default_icon">
+           text="Sentra" description="Sentra Tools"
+           popup="true" icon="SdkIcons.Sentra_icon">
       <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="org.intellij.sdk.action.GenerateUtForSelectedFunctions"/>
       <action id="org.intellij.sdk.action.GroupPopDialogAction" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"
-              text="A Group Action" description="SDK static grouped action example"
-              icon="SdkIcons.Sdk_default_icon">
+              text="Generate Unit Test For Selected Function" description="Generate Unit Test For Selected Function">
       </action>
     </group>
     <!--
@@ -82,9 +81,10 @@
     -->
     <group id="org.intellij.sdk.action.CustomDefaultActionGroup"
            class="org.intellij.sdk.action.CustomDefaultActionGroup"
-           popup="true">
+           popup="true" icon="SdkIcons.Sentra_icon">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-      <action id="org.intellij.sdk.action.CustomGroupedAction" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"/>
+      <action id="org.intellij.sdk.action.CustomGroupedAction1" class="org.intellij.sdk.action.ClearTokenAction"/>
+      <action id="org.intellij.sdk.action.CustomGroupedAction2" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"/>
     </group>
   </actions>
 
