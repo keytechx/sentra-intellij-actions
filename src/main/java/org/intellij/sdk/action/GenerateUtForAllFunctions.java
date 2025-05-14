@@ -20,10 +20,7 @@ import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.intellij.sdk.action.services.ActionService;
-import org.intellij.sdk.action.services.CodeAnalyzerService;
-import org.intellij.sdk.action.services.TokenService;
-import org.intellij.sdk.action.services.UnitTestGenerator;
+import org.intellij.sdk.action.services.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * in the plugin.xml file.
  * But when added at runtime, this class is instantiated by an action group.
  */
-public class GenerateUtForSelectedFunctions extends AnAction {
+public class GenerateUtForAllFunctions extends AnAction {
   private final AtomicBoolean cancelToken = new AtomicBoolean(false);
 
   @Override
@@ -50,7 +47,7 @@ public class GenerateUtForSelectedFunctions extends AnAction {
    * This default constructor is used by the IntelliJ Platform framework to instantiate this class based on plugin.xml
    * declarations. Only needed in {@link GenerateUtForSelectedFunctions} class because a second constructor is overridden.
    */
-  public GenerateUtForSelectedFunctions() {
+  public GenerateUtForAllFunctions() {
     super();
   }
 
@@ -64,7 +61,7 @@ public class GenerateUtForSelectedFunctions extends AnAction {
    * @param icon        The icon to be used with the menu item.
    */
   @SuppressWarnings("ActionPresentationInstantiatedInCtor") // via DynamicActionGroup
-  public GenerateUtForSelectedFunctions(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public GenerateUtForAllFunctions(@Nullable String text, @Nullable String description, @Nullable Icon icon, ActionService actionService) {
     super(text, description, icon);
   }
 
@@ -76,9 +73,8 @@ public class GenerateUtForSelectedFunctions extends AnAction {
       return;
     }
 
-    String selectedFunction = ActionService.getSelectedFunction(event);
     String fileContent = ActionService.getFullCodeFile(event);
-    if (selectedFunction.isEmpty() || fileContent.isEmpty()) {
+    if (fileContent.isEmpty()) {
       Messages.showMessageDialog(
               "No active text editor or no selection.",
               title,
@@ -97,15 +93,18 @@ public class GenerateUtForSelectedFunctions extends AnAction {
 
     String filePath = ActionService.getFilePath(event);
     String projectBaseDir = ActionService.getProjectBaseDir(event, fileType);
+    String workspaceRoot = ActionService.getWorkspaceRoot(event);
 
     ProgressManager.getInstance().run(new Task.Backgroundable(event.getProject(), "Generating unit tests") {
 
       @Override
       public void run(@NotNull ProgressIndicator progressIndicator) {
         try {
+          BaseClassAttacher baseClassAttacher = new BaseClassAttacher();
+          String fileContentWithBaseClass = String.valueOf(baseClassAttacher.attachBaseClass(workspaceRoot, fileContent, fileType, cancelToken, progressIndicator));
           UnitTestGenerator generator = new UnitTestGenerator();
           generator.setProjectBaseDir(projectBaseDir);
-          generator.doGenUnitTest(filePath, fileType, fileContent, selectedFunction, cancelToken, progressIndicator);
+          generator.doGenUnitTest(filePath, fileType, fileContent, fileContent, cancelToken, progressIndicator);
         } catch (Exception ex) {
           Messages.showErrorDialog("Error during unit test generation: " + ex.getMessage(), "Error");
         }

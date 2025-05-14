@@ -85,6 +85,7 @@
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
       <action id="org.intellij.sdk.action.CustomGroupedAction1" class="org.intellij.sdk.action.ClearTokenAction"/>
       <action id="org.intellij.sdk.action.CustomGroupedAction2" class="org.intellij.sdk.action.GenerateUtForSelectedFunctions"/>
+      <action id="org.intellij.sdk.action.CustomGroupedAction3" class="org.intellij.sdk.action.GenerateUtForAllFunctions"/>
     </group>
   </actions>
 

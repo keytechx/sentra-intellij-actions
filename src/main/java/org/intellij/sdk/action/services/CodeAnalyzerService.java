@@ -1,9 +1,11 @@
 package org.intellij.sdk.action.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -132,5 +134,19 @@ public class CodeAnalyzerService {
             result = fileName.substring(0, dotIndex);
         }
         return result;
+    }
+
+    public static Optional<Path> findBaseClassFile(String workspaceRoot, String baseClassName, String fileType) throws IOException {
+        Path startPath = Paths.get(workspaceRoot);
+        String pattern = baseClassName + "." + fileType;
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(startPath)) {
+            // Use Files.walk() to traverse the directory recursively
+            return Files.walk(startPath)
+                    .filter(path -> Files.isRegularFile(path) && path.getFileName().toString().matches(pattern))
+                    .findFirst(); // Return the first match, or empty if none found
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
