@@ -7,7 +7,6 @@ import org.intellij.sdk.action.dto.MergeClassResponse;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +30,8 @@ public class ApiService {
         return postRequest(url, payload, accessToken, ApiResponse.class);
     }
 
-    public static ExtractBaseClassResponse extractBaseClass(String code, String accessToken) throws IOException {
+    public static ExtractBaseClassResponse extractBaseClass(String code) throws IOException {
+        String accessToken = TokenService.getStoredAccessToken();
         String url = ApiConfig.API_ENDPOINTS.EXTRACT_BASE_CLASS;
 
         Map<String, String> payload = new HashMap<>();
@@ -40,7 +40,8 @@ public class ApiService {
         return postRequest(url, payload, accessToken, ExtractBaseClassResponse.class);
     }
 
-    public static MergeClassResponse mergeClass(String code, String accessToken) throws IOException {
+    public static MergeClassResponse mergeClass(String code) throws IOException {
+        String accessToken = TokenService.getStoredAccessToken();
         String url = ApiConfig.API_ENDPOINTS.MERGE_CLASS;
 
         Map<String, String> payload = new HashMap<>();
