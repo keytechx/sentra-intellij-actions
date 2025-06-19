@@ -28,41 +28,36 @@ public class UnitTestGenerator {
             String fileName,
             AtomicBoolean cancelToken,
             ProgressIndicator progressIndicator) throws ExecutionException, InterruptedException {
-        List<String> categories = List.of("Happy", "Negative", "Edge", "Throw Exception");
         String key = UUID.randomUUID().toString();
         StringBuilder generatedTests = new StringBuilder();
 
-        for (String category : categories) {
-            if (cancelToken.get()) {
-                return;
-            }
-            String newTestNames = generateAndSaveUnitTest(
-                    key,
-                    codeContent,
-                    functionName,
-                    category,
-                    fileName,
-                    generatedTests.toString(),
-                    progressIndicator);
-            generatedTests.append(newTestNames);
+        if (cancelToken.get()) {
+            return;
         }
+        String newTestNames = generateAndSaveUnitTest(
+                key,
+                codeContent,
+                functionName,
+                fileName,
+                generatedTests.toString(),
+                progressIndicator);
+        generatedTests.append(newTestNames);
     }
 
     public String generateAndSaveUnitTest(
             String key,
             String codeContent,
             String functionName,
-            String category,
             String fileName,
             String generatedTests,
             ProgressIndicator progressIndicator) throws ExecutionException, InterruptedException {
-        String logMessage = "Generating unit tests for: " + functionName + "-" + category;
+        String logMessage = "Generating unit tests for: " + functionName;
         System.out.println(logMessage);
         progressIndicator.setText(logMessage);
         // Call to genUnitTest (this should be implemented as per your requirements)
         ApiResponse apiResult = null;
         try {
-            apiResult = ApiService.genUnitTest(key, functionName, codeContent, category, getAccessToken(), generatedTests);
+            apiResult = ApiService.genUnitTest(key, functionName, codeContent, getAccessToken(), generatedTests);
         } catch (IOException ex) {
             System.out.println(ex.toString());
             return "";
@@ -77,13 +72,12 @@ public class UnitTestGenerator {
         String extension = CodeAnalyzerService.getFileExtension(fileName);
         String fileBaseNameWithoutExtension = CodeAnalyzerService.getFileNameWithoutExtension(fileBaseName.toString());
         Path fileFolder = Paths.get(outputFolder, fileBaseNameWithoutExtension);
-        Path categoryFolder = fileFolder.resolve(category);
 
         try {
-            Files.createDirectories(categoryFolder);
+            Files.createDirectories(fileFolder);
 
             // Write the result to a file
-            Path filePath = categoryFolder.resolve(functionName + "." + extension);
+            Path filePath = fileFolder.resolve(functionName + "." + extension);
             Files.writeString(filePath, apiResult.getUnitTest());
         } catch (IOException e) {
             e.printStackTrace();

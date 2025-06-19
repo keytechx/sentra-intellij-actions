@@ -12,9 +12,6 @@ public class ApiResponse {
     @JsonProperty("unit_test")
     private String unitTest;
 
-    @JsonProperty("category")
-    private String category;
-
     @JsonProperty("generated_tests")
     private String generatedTests;
 
