@@ -17,14 +17,13 @@ import java.util.Map;
 public class ApiService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static ApiResponse genUnitTest(String key, String functionName, String code, String category, String accessToken, String generatedTests) throws IOException {
+    public static ApiResponse genUnitTest(String key, String functionName, String code, String accessToken, String generatedTests) throws IOException {
         String url = ApiConfig.API_ENDPOINTS.GENERATE_UNIT_TEST;
 
         Map<String, String> payload = new HashMap<>();
         payload.put("key", key);
         payload.put("functionName", functionName);
         payload.put("sourceCode", code);
-        payload.put("category", category);
         payload.put("generatedTests", generatedTests);
 
         return postRequest(url, payload, accessToken, ApiResponse.class);

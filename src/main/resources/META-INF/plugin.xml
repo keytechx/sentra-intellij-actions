@@ -9,6 +9,10 @@
   <!-- Text to display as name on Settings | Plugin page -->
   <name>Sentra</name>
 
+  <vendor email="support@sentra.dev" url="https://sentra.dev">
+    Sentra
+  </vendor>
+
   <!-- Indicate this plugin can be loaded in all IntelliJ Platform-based products. -->
   <depends>com.intellij.modules.platform</depends>
 
@@ -18,9 +22,9 @@
 
 **Automated Unit Testing for Every Codebase**
 
-Sentra Unit Test Generator is a powerful Visual Studio Code extension that eliminates the manual burden of writing and maintaining unit tests. Leveraging Sentra's AI-driven, language-agnostic engine, this tool helps developers and teams quickly generate meaningful unit test scaffolding across various programming languages.
+Sentra Unit Test Generator is a powerful IntelliJ plugin that eliminates the manual burden of writing and maintaining unit tests. Leveraging Sentra's AI-driven, language-agnostic engine, this tool helps developers and teams quickly generate meaningful unit test scaffolding across various programming languages.
 
-Whether you're building in **TypeScript**, **JavaScript**, **Python**, **Java**, **PHP**, **.NET**, or others, Sentra helps boost test coverage, reduce bugs, and accelerate delivery — all without the overhead of manual test creation or upkeep.
+Whether you're building in TypeScript, JavaScript, Python, Java, PHP, .NET, or others, Sentra helps boost test coverage, reduce bugs, and accelerate delivery — all without the overhead of manual test creation or upkeep.
 
 ---
 
