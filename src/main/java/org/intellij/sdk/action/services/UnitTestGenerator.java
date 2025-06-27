@@ -168,7 +168,7 @@ public class UnitTestGenerator {
 
                             // Simulate progress reporting
                             double progress = ((double) (i + 1) / totalMatches) * 100;
-                            System.out.println(String.format("%d%% completed", (int) progress));
+                            System.out.printf("%d%% completed%n", (int) progress);
                         }
                     }
 
