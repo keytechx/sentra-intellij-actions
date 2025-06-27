@@ -13,6 +13,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.roots.ProjectRootManager;
 
 import java.util.Objects;
 
@@ -29,20 +30,17 @@ public class ActionService {
     }
 
     public static String getFullCodeFile(AnActionEvent event) {
-        Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+        Editor editor = event.getData(CommonDataKeys.EDITOR);
+        if (editor == null) {
+            return "";
+        }
         Document document = editor.getDocument(); // Get the document (file content)
         return document.getText(); // This contains the full code of the file
     }
 
     public static String getFilePath(AnActionEvent event) {
-        Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        if (editor == null) {
-            Messages.showErrorDialog("No active editor!", "Error");
-            return "";
-        }
-
         // Get the file associated with the current editor
-        VirtualFile virtualFile = event.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
+        VirtualFile virtualFile = getVirtualFile(event);
         if (virtualFile == null) {
             Messages.showErrorDialog("No virtual file found.", "Error");
             return "";
@@ -51,19 +49,23 @@ public class ActionService {
     }
 
     public static String getFileName(AnActionEvent event) {
-        Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        if (editor == null) {
-            Messages.showErrorDialog("No active editor!", "Error");
-            return "";
-        }
-
         // Get the file associated with the current editor
-        VirtualFile virtualFile = event.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
+        VirtualFile virtualFile = getVirtualFile(event);
         if (virtualFile == null) {
             Messages.showErrorDialog("No virtual file found.", "Error");
             return "";
         }
         return virtualFile.getName();
+    }
+
+    public static VirtualFile getVirtualFile(AnActionEvent event) {
+        Editor editor = event.getData(CommonDataKeys.EDITOR);
+        if (editor == null) {
+            return null;
+        }
+
+        // Get the file associated with the current editor
+        return event.getData(CommonDataKeys.VIRTUAL_FILE);
     }
 
     public static String getProjectBaseDir(AnActionEvent event, String fileType) {
@@ -75,7 +77,7 @@ public class ActionService {
 
         // Get the module from the project
         ModuleManager moduleManager = ModuleManager.getInstance(project);
-        com.intellij.openapi.module.Module[] modules = moduleManager.getModules();
+        Module[] modules = moduleManager.getModules();
         if (modules.length == 0) {
             return "";
         }
@@ -103,18 +105,16 @@ public class ActionService {
     }
 
     public static String getWorkspaceRoot(AnActionEvent event) {
-        // Get the current project
         Project project = event.getProject();
         if (project == null) {
             return "";
         }
 
-        // Get the project base directory (which serves as the workspace root)
-        VirtualFile projectRoot = project.getBaseDir();
-
-        if (projectRoot != null) {
-            return projectRoot.getPath(); // Return the file system path of the project root
+        VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentRoots();
+        if (contentRoots.length > 0) {
+            return contentRoots[0].getPath(); // Use the first content root
         }
+
         return "";
     }
 }

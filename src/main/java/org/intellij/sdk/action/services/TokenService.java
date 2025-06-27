@@ -1,15 +1,15 @@
 package org.intellij.sdk.action.services;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import org.intellij.sdk.action.storages.UserTokenStorage;
+import com.intellij.openapi.application.ApplicationManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class TokenService {
@@ -43,7 +43,7 @@ public class TokenService {
     }
 
     public static boolean generateAccessToken(String title) {
-        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         String storedUserToken = tokenStorage.getUserToken();
         if (storedUserToken == null || storedUserToken.isEmpty()) {
             Messages.showMessageDialog(
@@ -103,13 +103,13 @@ public class TokenService {
 
             String jsonInputString = "{\"token\":\"" + userToken + "\"}";
             try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_CREATED) {  // HTTP 200 OK
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
                     StringBuilder response = new StringBuilder();
                     String responseLine;
                     while ((responseLine = br.readLine()) != null) {
@@ -138,17 +138,17 @@ public class TokenService {
     }
 
     public static String getStoredAccessToken() {
-        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         return tokenStorage.getAccessToken();
     }
 
     public static String getStoredUserToken() {
-        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         return tokenStorage.getUserToken();
     }
 
     public static void clearStoredUserToken() {
-        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         tokenStorage.setAccessToken(null);
         tokenStorage.setUserToken(null);
     }
