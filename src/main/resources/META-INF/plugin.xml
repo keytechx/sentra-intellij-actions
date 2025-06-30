@@ -41,6 +41,7 @@
   <change-notes>
     <![CDATA[
       <ul>
+        <li><b>2.0.3</b> Update description format.</li>
         <li><b>2.0.2</b> Replace deprecated methods.</li>
         <li><b>2.0.1</b> Update description.</li>
         <li><b>2.0.0</b> Renamed from register_actions and converted to Gradle project.</li>
