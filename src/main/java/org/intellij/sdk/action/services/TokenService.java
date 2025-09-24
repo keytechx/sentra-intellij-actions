@@ -1,18 +1,23 @@
 package org.intellij.sdk.action.services;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
 import org.intellij.sdk.action.storages.UserTokenStorage;
 import com.intellij.openapi.application.ApplicationManager;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class TokenService {
+    private static final Logger LOG = Logger.getInstance(RequestTokenDialog.class);
+
     public static boolean checkForToken() {
         String extensionId = "sentra.sentra-unit-test-generator";  // Placeholder for extension ID
 
@@ -76,30 +81,25 @@ public class TokenService {
 
     private static boolean checkToken(String accessToken) {
         try {
-            URL url = new URL(ApiConfig.API_ENDPOINTS.CHECK_ACCESS_TOKEN);
+            URL url = URI.create(ApiConfig.API_ENDPOINTS.CHECK_ACCESS_TOKEN).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Authorization", "Bearer " + accessToken);
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {  // HTTP 200 OK
-                return true;
-            }
-            return false;
+            // HTTP 200 OK
+            return responseCode == HttpURLConnection.HTTP_OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to check token", e);
             return false;
         }
     }
 
     private static String getNewAccessToken(String userToken) {
         try {
-            URL url = new URL(ApiConfig.API_ENDPOINTS.GENERATE_USER_TOKEN);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
+            URL url = URI.create(ApiConfig.API_ENDPOINTS.GENERATE_USER_TOKEN).toURL();
+            HttpURLConnection connection = createConnection(url);
 
             String jsonInputString = "{\"token\":\"" + userToken + "\"}";
             try (OutputStream os = connection.getOutputStream()) {
@@ -120,7 +120,7 @@ public class TokenService {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to get new access token", e);
             return null;
         }
     }
@@ -151,5 +151,18 @@ public class TokenService {
         UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         tokenStorage.setAccessToken(null);
         tokenStorage.setUserToken(null);
+    }
+
+    private static HttpURLConnection createConnection(URL url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+            connection.setConnectTimeout(5000);
+            return connection;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

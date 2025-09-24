@@ -8,6 +8,7 @@ import org.intellij.sdk.action.dto.MergeClassResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.NetworkInterface;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -109,7 +110,7 @@ public class ApiService {
     }
 
     private static HttpURLConnection createConnection(String urlString, String method, String accessToken) throws IOException {
-        URL url = new URL(urlString);
+        URL url = URI.create(urlString).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod(method);
         conn.setRequestProperty("Content-Type", "application/json");

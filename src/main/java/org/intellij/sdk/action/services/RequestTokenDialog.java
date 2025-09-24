@@ -1,9 +1,8 @@
 package org.intellij.sdk.action.services;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBTextField;
 import lombok.Getter;
@@ -22,6 +21,7 @@ import java.util.Map;
 
 @Getter
 public class RequestTokenDialog extends DialogWrapper {
+    private static final Logger LOG = Logger.getInstance(RequestTokenDialog.class);
 
     private JBTextField tokenField;
     private String enteredToken;
@@ -55,7 +55,7 @@ public class RequestTokenDialog extends DialogWrapper {
 
     // Save the token to PersistentStateComponent
     private void saveTokenToStorage(String token) {
-        UserTokenStorage tokenStorage = ServiceManager.getService(UserTokenStorage.class);
+        UserTokenStorage tokenStorage = ApplicationManager.getApplication().getService(UserTokenStorage.class);
         tokenStorage.setUserToken(token);
     }
 
@@ -93,7 +93,7 @@ public class RequestTokenDialog extends DialogWrapper {
             }
         } catch (Exception e) {
             // Handle exceptions
-            e.printStackTrace();
+            LOG.error("Failed to register token", e);
             return false;
         }
     }
@@ -126,7 +126,7 @@ public class RequestTokenDialog extends DialogWrapper {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to get Mac address", e);
         }
         return null;
     }
