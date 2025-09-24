@@ -1,5 +1,6 @@
 package org.intellij.sdk.action.services;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import org.intellij.sdk.action.dto.ExtractBaseClassResponse;
 import org.intellij.sdk.action.dto.MergeClassResponse;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class BaseClassAttacher {
+    private static final Logger LOG = Logger.getInstance(BaseClassAttacher.class);
 
     public CompletableFuture<String> attachBaseClass(
             String workspaceRoot,
@@ -62,7 +64,7 @@ public class BaseClassAttacher {
                 String baseFileContent = new String(Files.readAllBytes(baseClassFilePath.get()));
                 return recursivelyAttachAndMergeBaseClass(workspaceRoot, baseFileContent, fileType, fileContent, progressIndicator, cancelToken);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Failed to read base class file: " + baseClassFilePath.get(), e);
             }
         }
 

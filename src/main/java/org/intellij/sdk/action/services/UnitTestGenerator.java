@@ -1,10 +1,10 @@
 package org.intellij.sdk.action.services;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import lombok.Getter;
 import lombok.Setter;
 import org.intellij.sdk.action.dto.ApiResponse;
-import org.intellij.sdk.action.dto.CancellationToken;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,20 +14,20 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
 @Setter
 public class UnitTestGenerator {
     private String projectBaseDir = "";
+    private final Logger LOG = Logger.getInstance(RequestTokenDialog.class);
 
     public void generateAndSaveUnitTestForAllCategories(
             String codeContent,
             String functionName,
             String fileName,
             AtomicBoolean cancelToken,
-            ProgressIndicator progressIndicator) throws ExecutionException, InterruptedException {
+            ProgressIndicator progressIndicator) {
         String key = UUID.randomUUID().toString();
         StringBuilder generatedTests = new StringBuilder();
 
@@ -50,7 +50,7 @@ public class UnitTestGenerator {
             String functionName,
             String fileName,
             String generatedTests,
-            ProgressIndicator progressIndicator) throws ExecutionException, InterruptedException {
+            ProgressIndicator progressIndicator) {
         String logMessage = "Generating unit tests for: " + functionName;
         System.out.println(logMessage);
         progressIndicator.setText(logMessage);
@@ -59,7 +59,7 @@ public class UnitTestGenerator {
         try {
             apiResult = ApiService.genUnitTest(key, functionName, codeContent, getAccessToken(), generatedTests);
         } catch (IOException ex) {
-            System.out.println(ex.toString());
+            LOG.error("Failed to generate unit test", ex);
             return "";
         }
 
@@ -80,7 +80,7 @@ public class UnitTestGenerator {
             Path filePath = fileFolder.resolve(functionName + "." + extension);
             Files.writeString(filePath, apiResult.getUnitTest());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to write unit test result to files", e);
             return "";
         }
 

@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class CodeAnalyzerService {
     public enum Framework {
@@ -136,13 +137,12 @@ public class CodeAnalyzerService {
         return result;
     }
 
-    public static Optional<Path> findBaseClassFile(String workspaceRoot, String baseClassName, String fileType) throws IOException {
+    public static Optional<Path> findBaseClassFile(String workspaceRoot, String baseClassName, String fileType) {
         Path startPath = Paths.get(workspaceRoot);
         String pattern = baseClassName + "." + fileType;
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(startPath)) {
-            // Use Files.walk() to traverse the directory recursively
-            return Files.walk(startPath)
+        try (Stream<Path> walkStream = Files.walk(startPath)) {
+            return walkStream
                     .filter(path -> Files.isRegularFile(path) && path.getFileName().toString().matches(pattern))
                     .findFirst(); // Return the first match, or empty if none found
         } catch (IOException e) {
